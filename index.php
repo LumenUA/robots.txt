@@ -11,33 +11,6 @@
 	<input name="input_url" type="text" size="25" maxlength="25">
 	<input type="submit" name="ok" value="Ok">
 	</form>
-	<?php
-// ..Сохрянем в переменую текс из инпута
-$text_input = $_POST['input_url'];
-//Определяем, была ли установлена переменная.
-	if (isset($_POST['ok'])) {
-		if (@file_get_contents('http://'.$text_input.'/robots.txt') === false) {
-			echo '<h1>robots.txt Отсуствует</h1>';
-		} else {
-				$url = file_get_contents('http://'.$text_input.'/robots.txt');//Соедяем в строку содержимое robots.txt
-				$header = get_headers('http://'.$text_input.'/robots.txt');//Поучаем ответ сервера 
-				$status = substr($header[0], 9, 3);// Обрезаем статус до цифр
-
-	 			$sitemap_count = substr_count($url, 'Sitemap');
-				$host_count = substr_count($url, 'Host'); //Подсчитываем колиство подстрок в строке
-			
-		// Узнаём размер файла
-				$fh = fopen('http://'.$text_input.'/robots.txt', "r");
-				$str = fread($fh, 33768); //Bytes
-				$fsize += strlen($str);
-				function HumanBytes($size) {
-					$filesizename = array(" Bytes", " KB");
-					return $size ? round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . $filesizename[$i] : '0 Bytes';
-					}
-				}
-
-			}
-				?>
 
 				<table border="1">
 					<theader>
@@ -61,6 +34,43 @@ $text_input = $_POST['input_url'];
 
 						</tr>
 					</theader>
+	<?php
+// ..Сохрянем в переменую текс из инпута
+$text_input = $_POST['input_url'];
+//Определяем, была ли установлена переменная.
+	if (isset($_POST['ok'])) {
+		if (@file_get_contents('http://'.$text_input.'/robots.txt') === false) { ?>
+			<tr>
+						<td>
+							Проверка наличия файла robots.txt
+						</td>
+						<td>
+							Файл robots.txt НЕ присутствует
+						</td>
+						<td>
+							ОШИБКА
+						</td>
+						<td>
+							Доработки  требуются
+						</td>
+					</tr>
+		<? } else {
+				$url = file_get_contents('http://'.$text_input.'/robots.txt');//Соедяем в строку содержимое robots.txt
+				$header = get_headers('http://'.$text_input.'/robots.txt');//Поучаем ответ сервера 
+				$status = substr($header[0], 9, 3);// Обрезаем статус до цифр
+
+	 			$sitemap_count = substr_count($url, 'Sitemap');
+				$host_count = substr_count($url, 'Host'); //Подсчитываем колиство подстрок в строке
+			
+		// Узнаём размер файла
+				$fh = fopen('http://'.$text_input.'/robots.txt', "r");
+				$str = fread($fh, 33768); //Bytes
+				$fsize += strlen($str);
+				function HumanBytes($size) {
+					$filesizename = array(" Bytes", " KB");
+					return $size ? round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . $filesizename[$i] : '0 Bytes';
+					} ?>
+
 
 					<tr>
 						<td>
@@ -76,6 +86,11 @@ $text_input = $_POST['input_url'];
 							Доработки не требуются
 						</td>
 					</tr>
+				<? } 
+
+			
+				?>
+
 
 					<tr>
 						<td>
@@ -83,7 +98,7 @@ $text_input = $_POST['input_url'];
 						</td>
 						<? if ($host_count > 0) { ?>
 						<td>
-							В файле прописана <?echo $host_count;?> диретив Host
+							В файле прописана <? echo $host_count; ?> диретив Host
 						</td>
 						<td>
 							OK
@@ -92,7 +107,7 @@ $text_input = $_POST['input_url'];
 							Доработки не требуются
 						</td>
 
-						<?} else { ?>
+						<? } else { ?>
 
 
 						<td>
@@ -106,7 +121,7 @@ $text_input = $_POST['input_url'];
 						</td>
 
 
-						<?}?>
+						<? } ?>
 					</tr>
 
 					<tr>
@@ -124,7 +139,7 @@ $text_input = $_POST['input_url'];
 							Доработки не требуются
 						</td>
 						
-						<?} else { ?>
+						<? } else { ?>
 						
 
 						<td>
@@ -138,7 +153,7 @@ $text_input = $_POST['input_url'];
 						</td>
 						
 
-						<?}?>
+						<? } ?>
 					</tr>
 
 					<tr>
@@ -160,7 +175,7 @@ $text_input = $_POST['input_url'];
 						
 
 						<td>
-							При обращении к файлу robots.txt сервер возвращает код ответа <?echo $status;?>
+							При обращении к файлу robots.txt сервер возвращает код ответа <?php echo $status; ?>
 						</td>
 						<td>
 							Ошибка
@@ -174,11 +189,11 @@ $text_input = $_POST['input_url'];
 					</tr>
 					<tr>
 						<td>
-							Размер файла robots.txt
+							Проверка размера файла robots.txt
 						</td>
 						<? if ($fsize < 32768) { ?>
 						<td>
-							Размер файла robots.txt <?echo HumanBytes ($fsize);?> что на находиться в пределах допустимой нормы
+							Размер файла robots.txt <? echo "чапчап";?> что на находиться в пределах допустимой нормы
 						</td>
 						<td>
 							OK
@@ -201,12 +216,12 @@ $text_input = $_POST['input_url'];
 						</td>
 						
 
-						<?}?>
+						<? }?>
 					</tr>
 
 			</table>
 
 
-
+<? } ?>
 </body>
 </html>
