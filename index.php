@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<h3><i>Введите адрес сайта в формате </i>www.example.com</h3>
 	<title>Поиск файла robots.txt</title>
 	<meta charset='utf-8'>
 </head>
@@ -27,7 +28,7 @@ $text_input = $_POST['input_url'];
 			
 		// Узнаём размер файла
 				$fh = fopen('http://'.$text_input.'/robots.txt', "r");
-				$str = fread($fh, 32768); //Bytes
+				$str = fread($fh, 33768); //Bytes
 				$fsize += strlen($str);
 				function HumanBytes($size) {
 					$filesizename = array(" Bytes", " KB");
